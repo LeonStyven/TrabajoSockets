@@ -14,6 +14,7 @@ aforo = 100
 idCliente = 117
 adentro = [1, 5, 6]
 
+
 #create a socket object
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -27,7 +28,7 @@ serversocket.bind((host, port))
 #queue up to 5 requests
 serversocket.listen(5)
 
-#usuarios permitidos
+#usuarios permitidos por lista de acceso o por posicion
 for k in range(aforo):
     usuarioPermitidos.append(np.random.randint(0, 119))
 
@@ -37,6 +38,13 @@ if(idCliente in usuarioPermitidos):
     else: 
         permitirAcceso = False
 else: 
+    permitirAcceso = False
+    
+#Evaluacion del Aforo
+
+if(len(adentro)<=aforo-1):
+    permitirAcceso = True
+else:
     permitirAcceso = False
         
 
