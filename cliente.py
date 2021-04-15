@@ -8,7 +8,32 @@ import socket
 import random as rd
 import time 
 import numpy as np 
-import matplot.pyplot as plt
+import matplotlib.pyplot as plt
+
+
+idCliete = 0
+promedio = 1
+N = 1000
+solicitud = [0]
+repeticiones = 50
+
+#Obtener el tiempo entre cada evento
+for k in range(N):
+	tiempoEspera = rd.expovariate(1.0/promedio)
+	solicitud.append(tiempoEspera)
+
+plt.hist(solicitud, 100)
+np.mean(solicitud)
+
+
+#El servidor espera el tiempo que le indique la variable tiempoEspera
+
+while(N >= repeticiones and repeticiones>0):
+    idCliente = rd.randint(0, 119)
+    tiempoEspera = rd.expovariate(1.0/promedio)
+    solicitud.append(tiempoEspera)
+    repeticiones -= 1
+    time.sleep(tiempoEspera)
 
 
 #create a socket object
@@ -26,29 +51,15 @@ port = 9999
 s.connect((host, port))
 
 
-
 #receive no more than 1024 bytes
 tm = s.recv(1024)
 
 
-
 s.close()
+#Obtener un ID para enviar a verificacion
 
 
 
-print('\b El tiempo recibido desde el servidor es %s' % tm.decode('ascii'))
 
-promedio = 8.0
 
-N = 1000
 
-solicitud = [0]
-
-for k in range(N):
-	valor = rd.expovariate(1.0/promedio)
-	solicitud.append(valor)
-
-plt.hist(solicitud)
-np.mean(solicitud)
-
-solicitud[-1]
