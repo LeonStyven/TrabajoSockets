@@ -2,7 +2,7 @@
 """
 Created on Thu Apr 15 14:40:30 2021
 
-@author: user
+@author: 000420606, 000416688, 000437946
 """
 
 import socket
