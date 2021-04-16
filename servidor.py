@@ -9,12 +9,14 @@ import socket
 import numpy as np
 
 usuarioPermitidos = []
-permitirAcceso = False
+permitirAcceso = 0
 aforo = 100
-idCliente = 117
 adentro = [1, 5, 6]
 
-
+#usuarios permitidos por lista de acceso o por posicion
+for k in range(aforo):
+    usuarioPermitidos.append(np.random.randint(0, 119))
+    
 #create a socket object
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -28,24 +30,32 @@ serversocket.bind((host, port))
 #queue up to 5 requests
 serversocket.listen(5)
 
-#usuarios permitidos por lista de acceso o por posicion
-for k in range(aforo):
-    usuarioPermitidos.append(np.random.randint(0, 119))
-
-if(idCliente in usuarioPermitidos):   
-    if (not(idCliente in adentro)):
-        permitirAcceso = True
-    else: 
-        permitirAcceso = False
-else: 
-    permitirAcceso = False
+while True:
+    clientsocket,addr = serversocket.accept()
     
-#Evaluacion del Aforo
-
-if(len(adentro)<=aforo-1):
-    permitirAcceso = True
-else:
-    permitirAcceso = False
+    idCliente = clientsocket.recv(1024)
+    mensaje = int.from_bytes(idCliente, 'big')
+    
+    if(mensaje in usuarioPermitidos):   
+        if (not(mensaje in adentro)):
+            permitirAcceso = bytes(1)
+            
+            if(len(adentro)<=aforo):
+                permitirAcceso = bytes(1)
+            else:
+                permitirAcceso = bytes(0) 
+         
+        else: 
+            permitirAcceso = bytes(0)
+    else: 
+        permitirAcceso = bytes(0)
         
+    #Evaluacion del Aforo
+
+    
+    clientsocket.send(permitirAcceso)
+    clientsocket.close()
 
 print('--DESCONECTADO--')
+
+

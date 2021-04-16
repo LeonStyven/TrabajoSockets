@@ -13,31 +13,10 @@ import matplotlib.pyplot as plt
 
 idCliente = 0
 promedio = 1
-N = 1000
 solicitud = [0]
-repeticiones = 3
-
-#Obtener el tiempo entre cada evento
-for k in range(N):
-	tiempoEspera = rd.expovariate(1.0/promedio)
-	solicitud.append(tiempoEspera)
-
-plt.hist(solicitud, 100)
-np.mean(solicitud)
+repeticiones = 120
 
 
-#El servidor espera el tiempo que le indique la variable tiempoEspera
-
-while(N >= repeticiones and repeticiones>0):
-    idCliente = rd.randint(0, 119)
-    tiempoEspera = rd.expovariate(1.0/promedio)
-    solicitud.append(tiempoEspera)
-    repeticiones -= 1
-    time.sleep(tiempoEspera)
-
-
-#create a socket object
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
 
@@ -47,19 +26,41 @@ port = 9999
 
 
 
-#connection to hostname on the port
-s.connect((host, port))
+#Obtener el tiempo entre cada evento
+'''for k in range(N):
+	tiempoEspera = rd.expovariate(1.0/promedio)
+	solicitud.append(tiempoEspera)
+
+plt.hist(solicitud, 100)
+np.mean(solicitud)'''
 
 
-#receive no more than 1024 bytes
-tm = s.recv(1024)
+#El servidor espera el tiempo que le indique la variable tiempoEspera
 
-
-s.close()
-#Obtener un ID para enviar a verificacion
-
-
-
-
-
-
+while(repeticiones>0):
+    #create a socket object
+    clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
+    idCliente = rd.randint(0, 119)
+    mensaje = idCliente.to_bytes(2, 'big')
+    
+    tiempoEspera = rd.expovariate(1.0/promedio)
+    solicitud.append(tiempoEspera)
+    repeticiones -= 1
+    
+    #connection to hostname on the port
+    clientsocket.connect((host, port))
+    clientsocket.send(mensaje)
+    
+    #receive no more than 1024 bytes
+    permitirAcceso = clientsocket.recv(1024)
+    
+    if (permitirAcceso == bytes(1)):
+        print(str(idCliente) + ' ACCESO CONCEDIDO')
+    else:
+        print(str(idCliente) + ' ACCESO DENEGADO')
+        
+    time.sleep(tiempoEspera)
+    
+    clientsocket.close()
+    
