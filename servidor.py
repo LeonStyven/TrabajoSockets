@@ -9,7 +9,7 @@ import socket
 import numpy as np
 
 usuarioPermitidos = []
-permitirAcceso = False
+permitirAcceso = 0
 aforo = 100
 adentro = [1, 5, 6]
 
@@ -30,25 +30,32 @@ serversocket.bind((host, port))
 #queue up to 5 requests
 serversocket.listen(5)
 
+while True:
+    clientsocket,addr = serversocket.accept()
     
-idCliente = serversocket.recv(1024)
-
-if(idCliente in usuarioPermitidos):   
-    if (not(idCliente in adentro)):
-        permitirAcceso = True
+    idCliente = clientsocket.recv(1024)
+    mensaje = int.from_bytes(idCliente, 'big')
+    
+    if(mensaje in usuarioPermitidos):   
+        if (not(mensaje in adentro)):
+            permitirAcceso = bytes(1)
+            
+            if(len(adentro)<=aforo):
+                permitirAcceso = bytes(1)
+            else:
+                permitirAcceso = bytes(0) 
+         
+        else: 
+            permitirAcceso = bytes(0)
     else: 
-        permitirAcceso = False
-else: 
-    permitirAcceso = False
-    
-#Evaluacion del Aforo
-
-if(len(adentro)<=aforo-1):
-    permitirAcceso = True
-else:
-    permitirAcceso = False
-
-serversocket.send(permitirAcceso)
+        permitirAcceso = bytes(0)
         
+    #Evaluacion del Aforo
+
+    
+    clientsocket.send(permitirAcceso)
+    clientsocket.close()
 
 print('--DESCONECTADO--')
+
+

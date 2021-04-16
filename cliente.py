@@ -11,14 +11,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-idCliete = 0
+idCliente = 0
 promedio = 1
-N = 1000
 solicitud = [0]
-repeticiones = 50
+repeticiones = 120
 
-#create a socket object
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 
 
 
@@ -39,33 +37,38 @@ np.mean(solicitud)'''
 
 #El servidor espera el tiempo que le indique la variable tiempoEspera
 
-while(N >= repeticiones and repeticiones>0):
+while(repeticiones>0):
+    #create a socket object
+    clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
     idCliente = rd.randint(0, 119)
+    mensaje = idCliente.to_bytes(2, 'big')
+    
     tiempoEspera = rd.expovariate(1.0/promedio)
     solicitud.append(tiempoEspera)
     repeticiones -= 1
     
     #connection to hostname on the port
-    s.connect((host, port))
-    s.send(idCliente)
+    clientsocket.connect((host, port))
+    clientsocket.send(mensaje)
+    
+    #receive no more than 1024 bytes
+    permitirAcceso = clientsocket.recv(1024)
+    
+    if (permitirAcceso == bytes(1)):
+        print(str(idCliente) + ' ACCESO CONCEDIDO')
+    else:
+        print(str(idCliente) + ' ACCESO DENEGADO')
+        
     time.sleep(tiempoEspera)
-
-
-
-
-#receive no more than 1024 bytes
-permitirAcceso = s.recv(1024)
-
-if (permitirAcceso == True):
-    print('ACCESO CONCEDIDO')
-else:
-    print('ACCESO DENEGADO')
-
-s.close()
-
-
-
-
-
+    
+    clientsocket.close()
+    
+    
+    
+    
+    
+    
+    
 
 
