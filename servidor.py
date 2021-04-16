@@ -11,12 +11,10 @@ import numpy as np
 usuarioPermitidos = []
 permitirAcceso = False
 aforo = 100
+idCliente = 117
 adentro = [1, 5, 6]
 
-#usuarios permitidos por lista de acceso o por posicion
-for k in range(aforo):
-    usuarioPermitidos.append(np.random.randint(0, 119))
-    
+
 #create a socket object
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -30,8 +28,9 @@ serversocket.bind((host, port))
 #queue up to 5 requests
 serversocket.listen(5)
 
-    
-idCliente = serversocket.recv(1024)
+#usuarios permitidos por lista de acceso o por posicion
+for k in range(aforo):
+    usuarioPermitidos.append(np.random.randint(0, 119))
 
 if(idCliente in usuarioPermitidos):   
     if (not(idCliente in adentro)):
@@ -47,8 +46,6 @@ if(len(adentro)<=aforo-1):
     permitirAcceso = True
 else:
     permitirAcceso = False
-
-serversocket.send(permitirAcceso)
         
 
 print('--DESCONECTADO--')
