@@ -11,11 +11,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-idCliente = 0
+idCliete = 0
 promedio = 1
 N = 1000
 solicitud = [0]
-repeticiones = 3
+repeticiones = 50
 
 #Obtener el tiempo entre cada evento
 for k in range(N):
@@ -58,7 +58,7 @@ tm = s.recv(1024)
 s.close()
 #Obtener un ID para enviar a verificacion
 
-
+print('--Desconectado--')
 
 
 
