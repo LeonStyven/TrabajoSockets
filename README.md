@@ -11,7 +11,7 @@ Para probar el sistema de comunicación deben emularse los torniquetes de una de
 *	Salida por la portaría a partir de un número promedio.
 *	Selección de un ID aleatorio de una base de datos 20% mayor que la proporcionada (para que hayan IDs a los que no se deje ingresar).
 
-El trabajo fue terminado el 16 de abril de 2021
+El trabajo fue terminado el 16 de abril de 2021, y fue realizado en Spyder 5.0.0
 
 ## Autores
 
